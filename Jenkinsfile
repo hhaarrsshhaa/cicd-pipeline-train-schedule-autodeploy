@@ -1,5 +1,7 @@
 pipeline {
-    agent prod-server
+    agent {
+        label 'prod-1'
+    }
     environment {
         //be sure to replace "bhavukm" with your own Docker Hub username
         DOCKER_IMAGE_NAME = "harshadeelu/train-schedule"
