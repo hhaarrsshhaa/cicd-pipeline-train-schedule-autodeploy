@@ -39,7 +39,7 @@ pipeline {
                 CANARY_REPLICAS = 1
             }
             steps {
-               sh 'minikube kubectl apply -f --kubeconfig=/home/ubuntu/.kube/config train-schedule-kube-canary.yml'
+               sh 'kubectl apply -f train-schedule-kube-canary.yml'
             }
         }
         stage('DeployToProduction') {
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                sh 'minikube kubectl apply -f --kubeconfig=/home/ubuntu/.kube/config train-schedule-kube-canary.yml'
+                sh 'kubectl apply -f train-schedule-kube-canary.yml'
             }
         }
     }
