@@ -40,22 +40,17 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/hhaarrsshhaa/cicd-pipeline-train-schedule-autodeploy.git']]])
             }
         }
-        stage('CanaryDeploy') {
-            environment { 
-                CANARY_REPLICAS = 1
-            }
-            steps {
-               sh '/mnt/vdb/kubectl apply -f train-schedule-kube-canary.yml'
-            }
-        }
+        // stage('CanaryDeploy') {
+        //     environment { 
+        //         CANARY_REPLICAS = 1
+        //     }
+        //     steps {
+        //        sh '/mnt/vdb/kubectl apply -f train-schedule-kube-canary.yml'
+        //     }
+        // }
         stage('DeployToProduction') {
-            environment { 
-                CANARY_REPLICAS = 0
-            }
             steps {
-                input 'Deploy to Production?'
-                milestone(1)
-                sh '/mnt/vdb/kubectl apply -f train-schedule-kube-canary.yml'
+                sh '/mnt/vdb/kubectl apply -f train-schedule-kube.yml'
             }
         }
     }
