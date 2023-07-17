@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'prod-1'
+        label 'node-1'
     }
     environment {
         //be sure to replace "bhavukm" with your own Docker Hub username
@@ -34,12 +34,18 @@ pipeline {
                 }
             }
         }
+        stage('Checkout') {
+            steps {
+                // Checkout the Git repository
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/hhaarrsshhaa/cicd-pipeline-train-schedule-autodeploy.git']]])
+            }
+        }
         stage('CanaryDeploy') {
             environment { 
                 CANARY_REPLICAS = 1
             }
             steps {
-               sh 'minikube kubectl apply -f train-schedule-kube-canary.yml'
+               sh 'kubectl apply -f train-schedule-kube-canary.yml'
             }
         }
         stage('DeployToProduction') {
@@ -49,7 +55,7 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                sh 'minikube kubectl apply -f train-schedule-kube-canary.yml'
+                sh 'kubectl apply -f train-schedule-kube-canary.yml'
             }
         }
     }
